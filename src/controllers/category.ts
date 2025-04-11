@@ -91,7 +91,18 @@ export async function totalStockProduct( req: Request, res:Response){
     _sum: {stock: true},
     orderBy: {categoryId : "asc" }
   })
-  res.status(200).json(totalStockProduct)
+  const formatResult = await Promise.all(
+    totalStockProduct.map(async (item) => {
+      const category = await connection.category.findUnique({
+        where: {id: item.categoryId}
+      });
+      return {
+        categoryId: category?.name,
+        total: item._sum.stock
+      }
+    })
+  ) 
+  res.status(200).json(formatResult)
 }
 
 

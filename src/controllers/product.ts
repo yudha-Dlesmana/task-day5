@@ -4,10 +4,6 @@ import { connection } from "../connections/prismaClient";
 export async function createProduct( req: Request, res: Response){
   const {name, price, stock, categoryId} = req.body;
   try{
-    // console.log(`name ${name}`)
-    // console.log(`price ${price}`)
-    // console.log(`stock ${stock}`)
-    // console.log(`categoryId ${categoryId}`)
     const product = await connection.product.create({
       data: {name, price, stock, categoryId}
     })
@@ -22,7 +18,8 @@ export async function getAllProducts( req: Request, res: Response){
     sortBy = "id", order= "asc", 
     minPrice = 0, maxPrice = 100_000_000, 
     minStock = 0, maxStock = 100, 
-    limit = 10, offset=0 
+    limit = 10, offset=0,
+    limitRestock= 2, offsetRestock=0
   } = req.query;
 
   const filterByPrice: any = {}
@@ -46,7 +43,12 @@ export async function getAllProducts( req: Request, res: Response){
         [sortBy as string]: order as "asc" || "desc"},
       take: Number(limit),
       skip: Number(offset),
-      include: {restock: true}
+      include: {
+        restock: {
+          orderBy: {updateAt: "desc"}, 
+          take:Number(limitRestock),
+          skip:Number(offsetRestock)
+        }}
     })
     res.status(200).json(product)
   }catch(e){
@@ -116,6 +118,7 @@ export async function restockProduct( req: Request, res: Response){
       })
       })
     )
+    res.status(200).json({message: "product has restocked"})
   } catch(e){
       if( e instanceof Error){
         res.status(500).json({message: e.message})

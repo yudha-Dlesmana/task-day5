@@ -3,13 +3,13 @@ import { createProduct, deleteProduct, getAllProducts, getDetailProduct, restock
 
 const router = Router()
 
-router.get("/products/total-stock", totalStock)
+router.get("/products/total-stock", totalStock) // aman
 
-router.post("/products", createProduct); 
-router.get("/products", getAllProducts); 
-router.patch("/products", updateProducts);
-router.patch("/restock-products", restockProduct)
-router.get("/products/:id", getDetailProduct) 
-router.delete("/products/:id", deleteProduct); 
+router.post("/products", createProduct); // aman
+router.get("/products", getAllProducts); // aman
+router.patch("/products", updateProducts); // aman
+router.patch("/products/restock", restockProduct); // aman
+router.get("/products/:id", getDetailProduct); // aman
+router.delete("/products/:id", deleteProduct); // aman
 
 export default router;
