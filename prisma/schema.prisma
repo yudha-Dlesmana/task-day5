@@ -37,5 +37,5 @@ model Restock{
   quantity    Int
   updateAt    DateTime @default(now())
   
-  product     Product @relation(fields: [productId], references: [id])
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
